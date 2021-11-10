@@ -11,6 +11,12 @@ import SpriteKit
 class GameScene: SKScene {
     
     var scoreLabel: SKLabelNode!
+    var timerLabel: SKLabelNode!
+    var timeRemaimed = 60 {
+        didSet {
+            timerLabel.text = "Seconds left: \(timeRemaimed)"
+        }
+    }
     
     var score = 0 {
         didSet {
@@ -23,11 +29,13 @@ class GameScene: SKScene {
     var sprite3: SKSpriteNode!
     
     var gameOver = false
+    var gameOverLabel: SKLabelNode!
+    
     var gameTimer: Timer?
+    var gameTimeCounter: Timer?
+    
     var possibleTargets = ["bear", "lion", "penguin", "dontShoot", "franky", "madam", "redHat"]
     
-    //var possibleTargets = ["ball", "hammer", "tv"]
-   
     override func didMove(to view: SKView) {
         
        
@@ -36,6 +44,12 @@ class GameScene: SKScene {
         backGround.blendMode = .replace
         backGround.zPosition = -1
         addChild(backGround)
+        backGround.name = "b"
+        
+        timerLabel = SKLabelNode(fontNamed: "Chalkduster")
+        timerLabel.position = CGPoint(x: 250, y: 16)
+        timerLabel.horizontalAlignmentMode = .left
+        addChild(timerLabel)
       
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.position = CGPoint(x: 16, y: 16)
@@ -43,9 +57,39 @@ class GameScene: SKScene {
         addChild(scoreLabel)
         
         score = 0
+        timeRemaimed = 60
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(createTargets), userInfo: nil, repeats: true)
+        gameTimeCounter = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(secondsLeft), userInfo: nil, repeats: true)
         
+        gameTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createTargets), userInfo: nil, repeats: true)
+        
+    }
+    
+    @objc func secondsLeft() {
+        
+        if timeRemaimed >= 1 {
+            timeRemaimed -= 1
+            
+        } else {
+            gameOverLabel = SKLabelNode(fontNamed: "Chalkduster")
+            gameOverLabel.position = CGPoint(x: 500, y: 350)
+            gameOverLabel.fontSize = 140
+            gameOverLabel.fontColor = .systemRed
+            gameOverLabel.zPosition = 1
+            gameOverLabel.text = "Game over"
+            gameOverLabel.name = "GO"
+            addChild(gameOverLabel)
+            
+            gameTimer?.invalidate()
+            gameTimeCounter?.invalidate()
+            
+            for node in children {
+                if node.name != "b" && node.name != "GO" {
+                    node.removeFromParent()
+                }
+            }
+          
+        }
     }
     
     @objc func createTargets() {
@@ -59,39 +103,42 @@ class GameScene: SKScene {
             sprite1.name = "dontShoot"
             sprite2.name = "dontShoot"
             sprite3.name = "dontShoot"
+            
+            sprite1.run(SKAction.move(to: CGPoint(x: -200, y: 600), duration: 7))
+            sprite2.run(SKAction.move(to: CGPoint(x: 1200, y: 400), duration: 7))
+            sprite3.run(SKAction.move(to: CGPoint(x: -200, y: 150), duration: 7))
+            
         } else if target == "penguin" || target == "lion" || target == "bear"  {
             sprite1.name = "s"
             sprite2.name = "s"
             sprite3.name = "s"
+            
+            sprite1.run(SKAction.move(to: CGPoint(x: -200, y: 600), duration: 3))
+            sprite2.run(SKAction.move(to: CGPoint(x: 1200, y: 400), duration: 3))
+            sprite3.run(SKAction.move(to: CGPoint(x: -200, y: 150), duration: 3))
+            
         } else {
             sprite1.name = "s1"
             sprite2.name = "s1"
             sprite3.name = "s1"
+            
+            sprite1.run(SKAction.move(to: CGPoint(x: -200, y: 600), duration: 6))
+            sprite2.run(SKAction.move(to: CGPoint(x: 1200, y: 400), duration: 6))
+            sprite3.run(SKAction.move(to: CGPoint(x: -200, y: 150), duration: 6))
         }
         
-       
+        sprite1.xScale = 0.25
+        sprite1.yScale = 0.25
         
+        sprite2.xScale = 0.25
+        sprite2.yScale = 0.25
         
-        
-        
-        sprite1.xScale = 0.2
-        sprite1.yScale = 0.2
-        
-        sprite2.xScale = 0.2
-        sprite2.yScale = 0.2
-        
-        sprite3.xScale = 0.2
-        sprite3.yScale = 0.2
-        
-        sprite1.texture = SKTexture(imageNamed: target)
+        sprite3.xScale = 0.25
+        sprite3.yScale = 0.25
         
         sprite1.position = CGPoint(x: 1200, y: 600)
         sprite2.position = CGPoint(x: -200, y: 400)
         sprite3.position = CGPoint(x: 1200, y: 150)
-        
-        sprite1.run(SKAction.move(to: CGPoint(x: -200, y: 600), duration: 7))
-        sprite2.run(SKAction.move(to: CGPoint(x: 1200, y: 400), duration: 7))
-        sprite3.run(SKAction.move(to: CGPoint(x: -200, y: 150), duration: 7))
         
         addChild(sprite1)
         addChild(sprite2)
@@ -115,24 +162,28 @@ class GameScene: SKScene {
         
         for node in object {
             switch node.name {
+            
             case "dontShoot":
-                score -= 20
+                score -= 17
                 run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
                 node.removeFromParent()
       
             case "s":
-                score += 5
+                score += 8
                 run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
                 node.removeFromParent()
                
             case "s1":
-                score += 1
+                score += 4
                 run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
                 node.removeFromParent()
                 
-            default:
+            case "b":
                 score -= 3
                 run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false))
+                
+            default:
+                continue
             }
         }
             
