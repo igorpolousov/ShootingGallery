@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "redHat.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "hammer@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

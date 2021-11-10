@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "redHat.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "player@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
