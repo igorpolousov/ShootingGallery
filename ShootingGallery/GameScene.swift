@@ -34,6 +34,15 @@ class GameScene: SKScene {
     var gameTimer: Timer?
     var gameTimeCounter: Timer?
     
+    var bulletsLabel: SKLabelNode!
+    var bullets = 5 {
+        didSet {
+            bulletsLabel.text = "Bullets: \(bullets)"
+        }
+    }
+    
+    var reloadLabel: SKLabelNode!
+    
     var possibleTargets = ["bear", "lion", "penguin", "dontShoot", "franky", "madam", "redHat"]
     
     override func didMove(to view: SKView) {
@@ -50,6 +59,12 @@ class GameScene: SKScene {
         timerLabel.position = CGPoint(x: 250, y: 16)
         timerLabel.horizontalAlignmentMode = .left
         addChild(timerLabel)
+        
+        
+        bulletsLabel = SKLabelNode(fontNamed: "Chalkduster")
+        bulletsLabel.position = CGPoint(x: 600, y: 16)
+        bulletsLabel.horizontalAlignmentMode = .left
+        addChild(bulletsLabel)
       
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.position = CGPoint(x: 16, y: 16)
@@ -58,6 +73,7 @@ class GameScene: SKScene {
         
         score = 0
         timeRemaimed = 60
+        bullets = 5
         
         gameTimeCounter = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(secondsLeft), userInfo: nil, repeats: true)
         
@@ -160,33 +176,34 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let object = nodes(at: location)
         
-        for node in object {
-            switch node.name {
-            
-            case "dontShoot":
-                score -= 17
-                run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
-                node.removeFromParent()
-      
-            case "s":
-                score += 8
-                run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
-                node.removeFromParent()
-               
-            case "s1":
-                score += 4
-                run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
-                node.removeFromParent()
-                
-            case "b":
-                score -= 3
-                run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false))
-                
-            default:
-                continue
+        if bullets >= 1 {
+            for node in object {
+                switch node.name {
+                case "dontShoot":
+                    score -= 17
+                    run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
+                    node.removeFromParent()
+                    
+                case "s":
+                    score += 8
+                    run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
+                    node.removeFromParent()
+                     
+                case "s1":
+                    score += 4
+                    run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
+                    node.removeFromParent()
+                    
+                case "b":
+                    score -= 3
+                    run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false))
+                    bullets -= 1
+                    
+                default:
+                    continue
+                }
             }
         }
-            
     }
     
 }
