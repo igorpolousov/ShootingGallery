@@ -15,6 +15,7 @@
 		C2747C90273BBE750047E743 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2747C8F273BBE750047E743 /* Assets.xcassets */; };
 		C2747C99273BEA720047E743 /* whack.caf in Resources */ = {isa = PBXBuildFile; fileRef = C2747C98273BEA720047E743 /* whack.caf */; };
 		C2747C9B273BEE1A0047E743 /* whackBad.caf in Resources */ = {isa = PBXBuildFile; fileRef = C2747C9A273BEE1A0047E743 /* whackBad.caf */; };
+		C2747C9D273C028A0047E743 /* reload.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C2747C9C273C028A0047E743 /* reload.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		C2747C91273BBE750047E743 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C2747C98273BEA720047E743 /* whack.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whack.caf; sourceTree = "<group>"; };
 		C2747C9A273BEE1A0047E743 /* whackBad.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whackBad.caf; sourceTree = "<group>"; };
+		C2747C9C273C028A0047E743 /* reload.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = reload.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				C2747C91273BBE750047E743 /* Info.plist */,
 				C2747C98273BEA720047E743 /* whack.caf */,
 				C2747C9A273BEE1A0047E743 /* whackBad.caf */,
+				C2747C9C273C028A0047E743 /* reload.mp3 */,
 			);
 			path = ShootingGallery;
 			sourceTree = "<group>";
@@ -131,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2747C9B273BEE1A0047E743 /* whackBad.caf in Resources */,
+				C2747C9D273C028A0047E743 /* reload.mp3 in Resources */,
 				C2747C8E273BBE740047E743 /* Main.storyboard in Resources */,
 				C2747C85273BBE740047E743 /* GameScene.sks in Resources */,
 				C2747C90273BBE750047E743 /* Assets.xcassets in Resources */,

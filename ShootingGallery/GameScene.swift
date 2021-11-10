@@ -56,13 +56,21 @@ class GameScene: SKScene {
         backGround.name = "b"
         
         timerLabel = SKLabelNode(fontNamed: "Chalkduster")
-        timerLabel.position = CGPoint(x: 250, y: 16)
+        timerLabel.position = CGPoint(x: 210, y: 16)
         timerLabel.horizontalAlignmentMode = .left
         addChild(timerLabel)
         
+        reloadLabel = SKLabelNode(fontNamed: "Chalkduster")
+        reloadLabel.position = CGPoint(x: 710, y: 16)
+        reloadLabel.horizontalAlignmentMode = .left
+        reloadLabel.text = "Reload"
+        reloadLabel.fontSize = 50
+        reloadLabel.fontColor = .blue
+        reloadLabel.name = "R"
+        addChild(reloadLabel)
         
         bulletsLabel = SKLabelNode(fontNamed: "Chalkduster")
-        bulletsLabel.position = CGPoint(x: 600, y: 16)
+        bulletsLabel.position = CGPoint(x: 520, y: 16)
         bulletsLabel.horizontalAlignmentMode = .left
         addChild(bulletsLabel)
       
@@ -92,7 +100,7 @@ class GameScene: SKScene {
             gameOverLabel.fontSize = 140
             gameOverLabel.fontColor = .systemRed
             gameOverLabel.zPosition = 1
-            gameOverLabel.text = "Game over"
+            gameOverLabel.text = "Game Over"
             gameOverLabel.name = "GO"
             addChild(gameOverLabel)
             
@@ -199,10 +207,16 @@ class GameScene: SKScene {
                     run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false))
                     bullets -= 1
                     
+                case "R":
+                    bullets = 6
+                    run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
                 default:
                     continue
                 }
             }
+        } else if object.contains(reloadLabel) {
+            run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
+            bullets = 5
         }
     }
     
