@@ -11,6 +11,7 @@ import SpriteKit
 class GameScene: SKScene {
     
     var scoreLabel: SKLabelNode!
+    
     var score = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
@@ -29,7 +30,12 @@ class GameScene: SKScene {
    
     override func didMove(to view: SKView) {
         
-        backgroundColor = .darkGray
+       
+        let backGround = SKSpriteNode(imageNamed: "back")
+        backGround.position = CGPoint(x: 512, y: 384)
+        backGround.blendMode = .replace
+        backGround.zPosition = -1
+        addChild(backGround)
       
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.position = CGPoint(x: 16, y: 16)
@@ -125,7 +131,8 @@ class GameScene: SKScene {
                 node.removeFromParent()
                 
             default:
-                score -= 1
+                score -= 3
+                run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false))
             }
         }
             
