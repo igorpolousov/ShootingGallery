@@ -137,15 +137,9 @@ class GameScene: SKScene {
             addChild(gameOverLabel)
             
             gameOver = true
-            
+            bullets = 0
             startStopTimers()
             
-            // Удаление всех nodes с экрана кроме фона и надписи GAME OVER
-            for node in children {
-                if node.name != "b" && node.name != "GO" && node.name != "NG"{
-                    node.removeFromParent()
-                }
-            }
         }
     }
     
@@ -249,20 +243,19 @@ class GameScene: SKScene {
             if gameOver == true {
                 score = 0
                 timeRemaimed = 60
+                bullets = 5
                 gameOverLabel.removeFromParent()
                 gameOver = false
-                startStopTimers()
             }
+            startStopTimers()
         }
-        
-       var validNodes = ["dontShoot", "s", "s1", "R", "NG"]
         
         // Проверка условия наличия пуль
         if bullets >= 1 {
             for node in object {
                 // Условие начисления очков при касании к объектам, !!! Недостаток в том что при касании к экрану происходит обязательное касание к фону, который начисляет очки за промах и если касание по цели, то происходит начисление очков за цель
                 if node.name == "dontShoot"{
-                    score -= 17
+                    score -= 10
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
@@ -270,7 +263,7 @@ class GameScene: SKScene {
                     node.run(sequence)
                     
                 } else if node.name == "s" {
-                    score += 8
+                    score += 5
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
@@ -278,19 +271,13 @@ class GameScene: SKScene {
                     node.run(sequence)
                      
                 } else if node.name == "s1" {
-                    score += 4
+                    score += 1
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                     
-//                } else if node.name == "b" && node.name != "s" && node.name != "s1" && node.name != "R" {
-//                            score -= 3
-//                            let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
-//                            let sequence = SKAction.sequence([sound])
-//                            node.run(sequence)
-    
                 } else if node.name == "R" {
                     bullets = 5
                     run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
