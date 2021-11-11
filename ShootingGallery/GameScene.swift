@@ -244,20 +244,24 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let object = nodes(at: location)
         
+        
         if object.contains(newGameLabel) {
-            gameOver = false
-            score = 0
-            timeRemaimed = 60
-            gameOverLabel.removeFromParent()
-            startStopTimers()
+            if gameOver == true {
+                score = 0
+                timeRemaimed = 60
+                gameOverLabel.removeFromParent()
+                gameOver = false
+                startStopTimers()
+            }
         }
+        
+       var validNodes = ["dontShoot", "s", "s1", "R", "NG"]
         
         // Проверка условия наличия пуль
         if bullets >= 1 {
             for node in object {
                 // Условие начисления очков при касании к объектам, !!! Недостаток в том что при касании к экрану происходит обязательное касание к фону, который начисляет очки за промах и если касание по цели, то происходит начисление очков за цель
-                switch node.name {
-                case "dontShoot":
+                if node.name == "dontShoot"{
                     score -= 17
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
@@ -265,8 +269,7 @@ class GameScene: SKScene {
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                     
-                    
-                case "s":
+                } else if node.name == "s" {
                     score += 8
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
@@ -274,7 +277,7 @@ class GameScene: SKScene {
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                      
-                case "s1":
+                } else if node.name == "s1" {
                     score += 4
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
@@ -282,17 +285,15 @@ class GameScene: SKScene {
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                     
-                case "b":
-                    score -= 3
-                    let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
-                    let sequence = SKAction.sequence([sound])
-                    node.run(sequence)
-                    
-                case "R":
+//                } else if node.name == "b" && node.name != "s" && node.name != "s1" && node.name != "R" {
+//                            score -= 3
+//                            let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
+//                            let sequence = SKAction.sequence([sound])
+//                            node.run(sequence)
+    
+                } else if node.name == "R" {
                     bullets = 5
                     run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
-                default:
-                    continue
                 }
             }
             // Если пули закончились то при касании к надписи reload происходит добавление патронов
