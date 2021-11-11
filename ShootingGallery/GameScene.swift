@@ -238,7 +238,6 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let object = nodes(at: location)
         
-        
         if object.contains(newGameLabel) {
             if gameOver == true {
                 score = 0
@@ -248,19 +247,32 @@ class GameScene: SKScene {
                 gameOver = false
             }
             startStopTimers()
+            return
         }
+        
+        // Если пули закончились то при касании к надписи reload происходит добавление патронов
+        if object.contains(reloadLabel) {
+            if !gameOver {
+                bullets = 5
+                run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
+                return
+            }
+        }
+        
+        
         
         // Проверка условия наличия пуль
         if bullets >= 1 {
             for node in object {
-                // Условие начисления очков при касании к объектам, !!! Недостаток в том что при касании к экрану происходит обязательное касание к фону, который начисляет очки за промах и если касание по цели, то происходит начисление очков за цель
-                if node.name == "dontShoot"{
+                    
+                 if node.name == "dontShoot"{
                     score -= 10
                     bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
+                    return
                     
                 } else if node.name == "s" {
                     score += 5
@@ -269,7 +281,8 @@ class GameScene: SKScene {
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
-                     
+                     return
+                    
                 } else if node.name == "s1" {
                     score += 1
                     bullets -= 1
@@ -277,16 +290,15 @@ class GameScene: SKScene {
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
+                    return
                     
-                } else if node.name == "R" {
-                    bullets = 5
-                    run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
+                    
+                } else if node.name == "b" {
+                    score -= 3
+                    run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: true))
+                    
                 }
             }
-            // Если пули закончились то при касании к надписи reload происходит добавление патронов
-        } else if object.contains(reloadLabel) {
-            run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
-            bullets = 5
         }
     }
     
