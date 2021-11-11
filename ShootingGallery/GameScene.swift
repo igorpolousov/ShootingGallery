@@ -20,6 +20,11 @@ class GameScene: SKScene {
         }
     }
     
+    // Надпись новая игра
+    var newGameLabel: SKLabelNode!
+    
+    var gameOver = false
+    
     // Надпись с таймером
     var timerLabel: SKLabelNode!
     // Счетчик таймера
@@ -42,6 +47,8 @@ class GameScene: SKScene {
     var gameTimer: Timer?
     // Счётчик для запуска createTarget()
     var gameTimeCounter: Timer?
+    
+    var backGroundLabel: SKLabelNode!
     
     // надпись с количеством оставшихся пуль
     var bulletsLabel: SKLabelNode!
@@ -68,6 +75,13 @@ class GameScene: SKScene {
         backGround.zPosition = -1
         addChild(backGround)
         backGround.name = "b"
+        
+        newGameLabel = SKLabelNode(fontNamed: "Chalkduster")
+        newGameLabel.position = CGPoint(x: 16, y: 730)
+        newGameLabel.horizontalAlignmentMode = .left
+        newGameLabel.text = "New game"
+        newGameLabel.name = "NG"
+        addChild(newGameLabel)
         
         // Установка надписи с таймером
         timerLabel = SKLabelNode(fontNamed: "Chalkduster")
@@ -102,11 +116,7 @@ class GameScene: SKScene {
         timeRemaimed = 60
         bullets = 5
         
-        // Запуск таймера для отсчета 60 секунд
-        gameTimeCounter = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(secondsLeft), userInfo: nil, repeats: true)
-        
-        // Запуск таймера
-        gameTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createTargets), userInfo: nil, repeats: true)
+       startStopTimers()
     }
     
     // Функция для работы таймера
@@ -126,14 +136,13 @@ class GameScene: SKScene {
             gameOverLabel.name = "GO"
             addChild(gameOverLabel)
             
-            // Остановка таймера для целей
-            gameTimer?.invalidate()
-            // Остановка таймера для секундомера
-            gameTimeCounter?.invalidate()
+            gameOver = true
+            
+            startStopTimers()
             
             // Удаление всех nodes с экрана кроме фона и надписи GAME OVER
             for node in children {
-                if node.name != "b" && node.name != "GO" {
+                if node.name != "b" && node.name != "GO" && node.name != "NG"{
                     node.removeFromParent()
                 }
             }
@@ -235,6 +244,14 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let object = nodes(at: location)
         
+        if object.contains(newGameLabel) {
+            gameOver = false
+            score = 0
+            timeRemaimed = 60
+            gameOverLabel.removeFromParent()
+            startStopTimers()
+        }
+        
         // Проверка условия наличия пуль
         if bullets >= 1 {
             for node in object {
@@ -242,6 +259,7 @@ class GameScene: SKScene {
                 switch node.name {
                 case "dontShoot":
                     score -= 17
+                    bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
@@ -250,6 +268,7 @@ class GameScene: SKScene {
                     
                 case "s":
                     score += 8
+                    bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
@@ -257,6 +276,7 @@ class GameScene: SKScene {
                      
                 case "s1":
                     score += 4
+                    bullets -= 1
                     let sound = SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false)
                     let fade = SKAction.fadeOut(withDuration: 0.3)
                     let sequence = SKAction.sequence([sound, fade])
@@ -269,17 +289,30 @@ class GameScene: SKScene {
                     node.run(sequence)
                     
                 case "R":
-                    bullets = 6
+                    bullets = 5
                     run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
                 default:
                     continue
-                        
                 }
             }
             // Если пули закончились то при касании к надписи reload происходит добавление патронов
         } else if object.contains(reloadLabel) {
             run(SKAction.playSoundFileNamed("reload.mp3", waitForCompletion: true))
             bullets = 5
+        }
+    }
+    
+    func startStopTimers() {
+        
+        if !gameOver {
+            // Запуск таймера для отсчета 60 секунд
+            gameTimeCounter = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(secondsLeft), userInfo: nil, repeats: true)
+            
+            // Запуск таймера
+            gameTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createTargets), userInfo: nil, repeats: true)
+        } else {
+            gameTimer?.invalidate()
+            gameTimeCounter?.invalidate()
         }
     }
 }
