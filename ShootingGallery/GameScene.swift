@@ -1,7 +1,7 @@
 //
 //  GameScene.swift
 //  ShootingGallery
-//
+//  Day 66
 //  Created by Igor Polousov on 10.11.2021.
 //
 
@@ -13,6 +13,7 @@ class GameScene: SKScene {
     
     // Надпись с количеством очков
     var scoreLabel: SKLabelNode!
+    
     // Счётчик количества очков
     var score = 0 {
         didSet {
@@ -23,10 +24,12 @@ class GameScene: SKScene {
     // Надпись новая игра
     var newGameLabel: SKLabelNode!
     
+    // Переменная game over
     var gameOver = false
     
     // Надпись с таймером
     var timerLabel: SKLabelNode!
+    
     // Счетчик таймера
     var timeRemaimed = 60 {
         didSet {
@@ -39,7 +42,6 @@ class GameScene: SKScene {
     var sprite2: SKSpriteNode!
     var sprite3: SKSpriteNode!
     
-    //var gameOver = false
     // Надпись игра закончена
     var gameOverLabel: SKLabelNode!
     
@@ -47,7 +49,7 @@ class GameScene: SKScene {
     var gameTimer: Timer?
     // Счётчик для запуска createTarget()
     var gameTimeCounter: Timer?
-    
+    // Картинка для заднего фона
     var backGroundLabel: SKLabelNode!
     
     // надпись с количеством оставшихся пуль
@@ -68,14 +70,14 @@ class GameScene: SKScene {
     // Объекты которые будут на экране при старте
     override func didMove(to view: SKView) {
         
-        // MARK!! установлен фон и сейчас он используется для подсчета промахов. Предлагается просто оставить фон, а для подстчёта промахов использовать node(at:)
+        //  Свойства задний фон и сейчас он используется для подсчета промахов.
         let backGround = SKSpriteNode(imageNamed: "back")
         backGround.position = CGPoint(x: 512, y: 384)
         backGround.blendMode = .replace
         backGround.zPosition = -1
         addChild(backGround)
         backGround.name = "b"
-        
+        // Свойства надпись новая игра
         newGameLabel = SKLabelNode(fontNamed: "Chalkduster")
         newGameLabel.position = CGPoint(x: 16, y: 730)
         newGameLabel.horizontalAlignmentMode = .left
@@ -89,7 +91,7 @@ class GameScene: SKScene {
         timerLabel.horizontalAlignmentMode = .left
         addChild(timerLabel)
         
-        // Установка надписи перезагрузки
+        // Установка надписи перезарядки патронов
         reloadLabel = SKLabelNode(fontNamed: "Chalkduster")
         reloadLabel.position = CGPoint(x: 710, y: 16)
         reloadLabel.horizontalAlignmentMode = .left
@@ -115,7 +117,7 @@ class GameScene: SKScene {
         score = 0
         timeRemaimed = 60
         bullets = 5
-        
+        // Запуск таймеров
        startStopTimers()
     }
     
@@ -138,6 +140,7 @@ class GameScene: SKScene {
             
             gameOver = true
             bullets = 0
+            // Остановка таймеров
             startStopTimers()
             
         }
@@ -238,6 +241,7 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let object = nodes(at: location)
         
+        // Запуск новой игры
         if object.contains(newGameLabel) {
             if gameOver == true {
                 score = 0
@@ -264,7 +268,7 @@ class GameScene: SKScene {
         // Проверка условия наличия пуль
         if bullets >= 1 {
             for node in object {
-                    
+                    // Если попали по dontShoot
                  if node.name == "dontShoot"{
                     score -= 10
                     bullets -= 1
@@ -273,7 +277,7 @@ class GameScene: SKScene {
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                     return
-                    
+                    // Если попали по s
                 } else if node.name == "s" {
                     score += 5
                     bullets -= 1
@@ -282,7 +286,7 @@ class GameScene: SKScene {
                     let sequence = SKAction.sequence([sound, fade])
                     node.run(sequence)
                      return
-                    
+                    // Если попали по s1
                 } else if node.name == "s1" {
                     score += 1
                     bullets -= 1
@@ -292,7 +296,7 @@ class GameScene: SKScene {
                     node.run(sequence)
                     return
                     
-                    
+                    // Если промах
                 } else if node.name == "b" {
                     score -= 3
                     run(SKAction.playSoundFileNamed("whackBad.caf", waitForCompletion: true))
@@ -301,7 +305,7 @@ class GameScene: SKScene {
             }
         }
     }
-    
+    // Функция записи и остановки таймеров
     func startStopTimers() {
         
         if !gameOver {
