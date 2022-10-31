@@ -45,9 +45,9 @@ class GameScene: SKScene {
     // Надпись игра закончена
     var gameOverLabel: SKLabelNode!
     
-    // Счетчик для таймера
+    // Счетчик для таймера createTarget()
     var gameTimer: Timer?
-    // Счётчик для запуска createTarget()
+    // Счётчик для запуска
     var gameTimeCounter: Timer?
     // Картинка для заднего фона
     var backGroundLabel: SKLabelNode!
